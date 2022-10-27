@@ -3,6 +3,7 @@
 #include <stdbool.h>
 
 #include <SDL2/SDL.h>
+
 #include "display.h"
 #include "vector.h"
 #include "mesh.h"
@@ -119,6 +120,13 @@ void render()
 		{
 			draw_rect(triangle.points[j].x, triangle.points[j].y, 3, 3, 0xffffff00);
 		}
+
+		draw_triangle(
+			triangle.points[0].x, triangle.points[0].y,
+			triangle.points[1].x, triangle.points[1].y,
+			triangle.points[2].x, triangle.points[2].y,
+			0xffffff00
+		);
 	}
 	
 	render_color_buffer();

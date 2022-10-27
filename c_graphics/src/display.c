@@ -58,6 +58,37 @@ void draw_grid()
 	}
 }
 
+void draw_pixel(int x, int y, uint32_t color)
+{
+	if (x >= 0 && y >= 0 && x < window_width && y < window_height)
+	{
+		color_buffer[window_width * y + x] = color;
+	}
+}
+
+
+void draw_line(int x0, int y0, int x1, int y1, uint32_t color)
+{
+	int deltaX = x1 - x0;
+	int deltaY = y1 - y0;
+
+	int side_length = abs(deltaX) >= abs(deltaY) ? abs(deltaX) : abs(deltaY);
+
+	float inc_x = deltaX / (float)side_length;
+	float inc_y = deltaY / (float)side_length;
+
+	float current_x = x0;
+	float current_y = y0;
+
+	for (int i = 0; i <= side_length; i++)
+	{
+		draw_pixel(round(current_x), round(current_y), color);
+		current_x += inc_x;
+		current_y += inc_y;
+	}
+}
+
+
 void draw_rect(int x, int y, int width, int height, uint32_t color)
 {
 	for (int i = 0; i < width; i++)
@@ -71,14 +102,12 @@ void draw_rect(int x, int y, int width, int height, uint32_t color)
 	}
 }
 
-void draw_pixel(int x, int y, uint32_t color)
+void draw_triangle(int x0, int y0, int x1, int y1, int x2, int y2, uint32_t color)
 {
-	if (x >= 0 && y >= 0 && x < window_width && y < window_height)
-	{
-		color_buffer[window_width * y + x] = color;
-	}
+	draw_line(x0, y0, x1, y1, color);
+	draw_line(x1, y1, x2, y2, color);
+	draw_line(x2, y2, x0, y0, color);
 }
-
 
 void clear_color_buffer(uint32_t color)
 {
