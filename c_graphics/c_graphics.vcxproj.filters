@@ -51,4 +51,8 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\cube.obj" />
+    <None Include="assets\f22.obj" />
+  </ItemGroup>
 </Project>
