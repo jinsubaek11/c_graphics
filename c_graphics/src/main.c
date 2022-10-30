@@ -11,7 +11,7 @@
 
 triangle_t* triangles_to_render = NULL;
 
-vec3_t camera_position = { 0, 0, -5 };
+vec3_t camera_position = { 0, 0, 0 };
 
 float fov_factor = 640;
 
@@ -33,6 +33,13 @@ void setup()
 
 	//load_cube_mesh_data();
 	load_obj_file_data("./assets/cube.obj");
+
+	vec3_t a = { 2.5, 6.4, 3.0 };
+	vec3_t b = { -2.2, 1.4, -1.0 };
+
+	float a_length = vec3_length(a);
+	float b_length = vec3_length(b);
+	vec3_t add_ab = vec3_add(a, b);
 }
 
 void process_input()
@@ -88,7 +95,7 @@ void update()
 		face_vertices[1] = mesh.vertices[mesh_face.b - 1];
 		face_vertices[2] = mesh.vertices[mesh_face.c - 1];
 
-		triangle_t projected_triangle;
+		vec3_t transformed_vertices[3];
 
 		for (int j = 0; j < 3; j++)
 		{
@@ -97,10 +104,33 @@ void update()
 			transformed_vertex = vec3_rotate_x(transformed_vertex, mesh.rotation.x);
 			transformed_vertex = vec3_rotate_y(transformed_vertex, mesh.rotation.y);
 			transformed_vertex = vec3_rotate_z(transformed_vertex, mesh.rotation.z);
-		
-			transformed_vertex.z -= camera_position.z;
 
-			vec2_t projected_point = project(transformed_vertex);
+			transformed_vertex.z += 5;
+
+			transformed_vertices[j] = transformed_vertex;
+		}
+
+		vec3_t vector_a = transformed_vertices[0];
+		vec3_t vector_b = transformed_vertices[1];
+		vec3_t vector_c = transformed_vertices[2];
+
+		vec3_t vector_ab = vec3_sub(vector_b, vector_a);
+		vec3_t vector_ac = vec3_sub(vector_c, vector_a);
+
+		vec3_t normal = vec3_cross(vector_ab, vector_ac);
+		vec3_t camera_ray = vec3_sub(camera_position, vector_a);
+		float dot_normal_camera = vec3_dot(normal, camera_ray);
+
+		if (dot_normal_camera < 0)
+		{
+			continue;
+		}
+
+		triangle_t projected_triangle;
+
+		for (int j = 0; j < 3; j++) 
+		{
+			vec2_t projected_point = project(transformed_vertices[j]);
 
 			projected_point.x += (window_width / 2);
 			projected_point.y += (window_height / 2);
