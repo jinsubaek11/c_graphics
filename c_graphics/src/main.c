@@ -116,8 +116,12 @@ void update()
 
 		vec3_t vector_ab = vec3_sub(vector_b, vector_a);
 		vec3_t vector_ac = vec3_sub(vector_c, vector_a);
+		vec3_normalize(&vector_ab);
+		vec3_normalize(&vector_ac);
 
 		vec3_t normal = vec3_cross(vector_ab, vector_ac);
+		vec3_normalize(&normal);
+
 		vec3_t camera_ray = vec3_sub(camera_position, vector_a);
 		float dot_normal_camera = vec3_dot(normal, camera_ray);
 
