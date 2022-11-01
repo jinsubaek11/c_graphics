@@ -11,7 +11,7 @@
 
 triangle_t* triangles_to_render = NULL;
 
-vec3_t camera_position = { 0, 0, 0 };
+vec3_t camera_position = { 0, 0, -3 };
 
 float fov_factor = 640;
 
@@ -123,6 +123,8 @@ void update()
 		vec3_normalize(&normal);
 
 		vec3_t camera_ray = vec3_sub(camera_position, vector_a);
+		//vec3_normalize(&camera_ray);
+
 		float dot_normal_camera = vec3_dot(normal, camera_ray);
 
 		if (dot_normal_camera < 0)
@@ -156,19 +158,24 @@ void render()
 	{
 		triangle_t triangle = triangles_to_render[i];
 		
-		for (int j = 0; j < 3; j++)
-		{
-			draw_rect(triangle.points[j].x, triangle.points[j].y, 3, 3, 0xffffff00);
-		}
-
-		draw_triangle(
+		draw_filled_triangle(
 			triangle.points[0].x, triangle.points[0].y,
 			triangle.points[1].x, triangle.points[1].y,
 			triangle.points[2].x, triangle.points[2].y,
 			0xffffff00
 		);
+
+		draw_triangle(
+			triangle.points[0].x, triangle.points[0].y,
+			triangle.points[1].x, triangle.points[1].y,
+			triangle.points[2].x, triangle.points[2].y,
+			0xffff0000
+		);
 	}
 	
+
+	//draw_filled_triangle(300, 100, 50, 400, 500, 700, 0xff00ff00);
+
 	array_free(triangles_to_render);
 
 	render_color_buffer();
