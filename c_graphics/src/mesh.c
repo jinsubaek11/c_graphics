@@ -17,23 +17,23 @@ vec3_t cube_vertices[N_CUBE_VERTICES] = {
 };
 
 face_t cube_faces[N_CUBE_FACES] = {
-	{ 1, 2, 3 },
-	{ 1, 3, 4 },
+	{ 1, 2, 3, 0xffff0000 },
+	{ 1, 3, 4, 0xffff0000 },
 
-	{ 4, 3, 5 },
-	{ 4, 5, 6 },
+	{ 4, 3, 5, 0xff00ff00 },
+	{ 4, 5, 6, 0xff00ff00 },
 
-	{ 6, 5, 7 },
-	{ 6, 7, 8 },
+	{ 6, 5, 7, 0xff0000ff },
+	{ 6, 7, 8, 0xff0000ff },
+		
+	{ 8, 7, 2, 0xffffff00 },
+	{ 8, 2, 1, 0xffffff00 },
+	
+	{ 2, 7, 5, 0xffff00ff },
+	{ 2, 5, 3, 0xffff00ff },
 
-	{ 8, 7, 2 },
-	{ 8, 2, 1 },
-
-	{ 2, 7, 5 },
-	{ 2, 5, 3 },
-
-	{ 6, 8, 1 },
-	{ 6, 1, 4 }
+	{ 6, 8, 1, 0xff00ffff },
+	{ 6, 1, 4, 0xff00ffff }
 };
 
 void load_cube_mesh_data()
