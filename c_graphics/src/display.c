@@ -31,7 +31,7 @@ bool initialize_window()
 		fprintf(stderr, "Error creating SDL window.\n");
 		return false;
 	}
-
+	
 	renderer = SDL_CreateRenderer(window, -1, 0);
 
 	if (!renderer)
