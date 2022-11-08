@@ -17,23 +17,23 @@ vec3_t cube_vertices[N_CUBE_VERTICES] = {
 };
 
 face_t cube_faces[N_CUBE_FACES] = {
-	{ 1, 2, 3, 0xffff0000 },
-	{ 1, 3, 4, 0xffff0000 },
+	{ 1, 2, 3, 0xffffffff },
+	{ 1, 3, 4, 0xffffffff },
 
-	{ 4, 3, 5, 0xff00ff00 },
-	{ 4, 5, 6, 0xff00ff00 },
+	{ 4, 3, 5, 0xffffffff },
+	{ 4, 5, 6, 0xffffffff },
 
-	{ 6, 5, 7, 0xff0000ff },
-	{ 6, 7, 8, 0xff0000ff },
+	{ 6, 5, 7, 0xffffffff },
+	{ 6, 7, 8, 0xffffffff },
 		
-	{ 8, 7, 2, 0xffffff00 },
-	{ 8, 2, 1, 0xffffff00 },
+	{ 8, 7, 2, 0xffffffff },
+	{ 8, 2, 1, 0xffffffff },
 	
-	{ 2, 7, 5, 0xffff00ff },
-	{ 2, 5, 3, 0xffff00ff },
+	{ 2, 7, 5, 0xffffffff },
+	{ 2, 5, 3, 0xffffffff },
 
-	{ 6, 8, 1, 0xff00ffff },
-	{ 6, 1, 4, 0xff00ffff }
+	{ 6, 8, 1, 0xffffffff },
+	{ 6, 1, 4, 0xffffffff }
 };
 
 void load_cube_mesh_data()
@@ -82,7 +82,12 @@ void load_obj_file_data(char* filename)
 				&vertex_indices[2], &texture_indices[2], &normal_indices[2]
 			);
 
-			face_t face = { vertex_indices[0], vertex_indices[1], vertex_indices[2] };
+			face_t face = { 
+				vertex_indices[0], 
+				vertex_indices[1], 
+				vertex_indices[2],
+				0xffffffff
+			};
 		
 			array_push(mesh.faces, face);
 		}

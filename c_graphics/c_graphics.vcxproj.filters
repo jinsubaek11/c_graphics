@@ -36,6 +36,9 @@
     <ClCompile Include="src\matrix.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="src\light.c">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\display.h">
@@ -54,6 +57,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="src\matrix.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="src\light.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>

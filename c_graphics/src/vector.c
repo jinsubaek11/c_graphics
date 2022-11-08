@@ -37,8 +37,9 @@ float vec2_dot(vec3_t a, vec3_t b)
 
 void vec2_normalize(vec2_t* v)
 {
-	v->x /= vec2_length(*v);
-	v->y /= vec2_length(*v);
+	float length = vec2_length(*v);
+	v->x /= length;
+	v->y /= length;
 }
 
 float vec3_length(vec3_t v)
@@ -87,9 +88,11 @@ float vec3_dot(vec3_t a, vec3_t b)
 
 void vec3_normalize(vec3_t* v)
 {
-	v->x /= vec3_length(*v);
-	v->y /= vec3_length(*v);
-	v->z /= vec3_length(*v);
+	float length = vec3_length(*v);
+
+	v->x /= length;
+	v->y /= length;
+	v->z /= length;
 }
 
 
