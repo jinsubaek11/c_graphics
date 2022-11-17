@@ -59,6 +59,8 @@ void load_obj_file_data(char* filename)
 
 	char line[1024];
 
+	tex2_t* texCoords = NULL;
+
 	while (fgets(line, 1024, file))
 	{
 		// vertex information
@@ -67,6 +69,13 @@ void load_obj_file_data(char* filename)
 			vec3_t vertex;
 			sscanf(line, "v %f %f %f", &vertex.x, &vertex.y, &vertex.z);
 			array_push(mesh.vertices, vertex);
+		}
+		
+		if (strncmp(line, "vt ", 3) == 0)
+		{
+			tex2_t texCoord;
+			sscanf(line, "vt %f %f", &texCoord.u, &texCoord.v);
+			array_push(texCoords, texCoord);
 		}
 		
 		// face information
@@ -84,9 +93,12 @@ void load_obj_file_data(char* filename)
 			);
 
 			face_t face = { 
-				vertex_indices[0], 
-				vertex_indices[1], 
-				vertex_indices[2],
+				vertex_indices[0] - 1, 
+				vertex_indices[1] - 1, 
+				vertex_indices[2] - 1,
+				texCoords[texture_indices[0] - 1],
+				texCoords[texture_indices[1] - 1],
+				texCoords[texture_indices[2] - 1],
 				0xffffffff
 			};
 		

@@ -10,6 +10,7 @@
 #include "array.h"
 #include "matrix.h"
 #include "light.h"
+#include "upng.h"
 
 triangle_t* triangles_to_render = NULL;
 
@@ -35,7 +36,7 @@ void setup()
 	}
 
 	color_buffer_texture = SDL_CreateTexture(
-		renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, window_width, window_height
+		renderer, SDL_PIXELFORMAT_RGBA32, SDL_TEXTUREACCESS_STREAMING, window_width, window_height
 	);
 
 	float fov = M_PI / 3.0f;
@@ -44,12 +45,14 @@ void setup()
 	float zfar = 100.0;
 	proj_matrix = mat4_make_perspective(fov, aspect, znear, zfar);
 
-	mesh_texture = (uint32_t*)REDBRICK_TEXTURE;
+	//mesh_texture = (uint32_t*)REDBRICK_TEXTURE;
 	texture_width = 64;
 	texture_height = 64;
 
-	load_cube_mesh_data();
+	//load_cube_mesh_data();
 	//load_obj_file_data("./assets/f22.obj");
+	load_obj_file_data("./assets/efa.obj");
+	load_png_texture_data("./assets/efa.png");
 }
 
 void process_input()
@@ -123,9 +126,9 @@ void update()
 
 	triangles_to_render = NULL;
 
-	//mesh.rotation.x += 0.01;
+	mesh.rotation.x += 0.01;
 	mesh.rotation.y += 0.01;
-	//mesh.rotation.z += 0.01;
+	mesh.rotation.z += 0.01;
 
 	mesh.translation.z = 5.0;
 
@@ -141,9 +144,9 @@ void update()
 		face_t mesh_face = mesh.faces[i];
 
 		vec3_t face_vertices[3];
-		face_vertices[0] = mesh.vertices[mesh_face.a - 1];
-		face_vertices[1] = mesh.vertices[mesh_face.b - 1];
-		face_vertices[2] = mesh.vertices[mesh_face.c - 1];
+		face_vertices[0] = mesh.vertices[mesh_face.a];
+		face_vertices[1] = mesh.vertices[mesh_face.b];
+		face_vertices[2] = mesh.vertices[mesh_face.c];
 
 		vec4_t transformed_vertices[3];
 
@@ -308,6 +311,7 @@ void render()
 void free_resources()
 {
 	free(color_buffer);
+	upng_free(png_texture);
 	array_free(mesh.faces);
 	array_free(mesh.vertices);
 }
