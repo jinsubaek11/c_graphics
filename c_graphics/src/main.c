@@ -5,6 +5,7 @@
 #include <SDL2/SDL.h>
 
 #include "display.h"
+#include "camera.h"
 #include "vector.h"
 #include "mesh.h"
 #include "array.h"
@@ -22,8 +23,11 @@ float fov_factor = 640;
 
 bool is_running;
 int previous_frame_time = 0;
+float delta_time = 0;
 
+mat4_t world_matrix;
 mat4_t proj_matrix;
+mat4_t view_matrix;
 
 void setup()
 {
@@ -125,15 +129,24 @@ void update()
 			previous_frame_time + FRAME_TARGET_TIME)
 		);
 
+	delta_time = (SDL_GetTicks() - previous_frame_time) / 1000.0;
 	previous_frame_time = SDL_GetTicks();
 
 	num_triangles_to_render = 0;
 
-	mesh.rotation.x += 0.01;
-	mesh.rotation.y += 0.01;
-	mesh.rotation.z += 0.01;
+	//mesh.rotation.x += 0.01 * delta_time;
+	//mesh.rotation.y += 0.01 * delta_time;
+	//mesh.rotation.z += 0.01 * delta_time;
+
+	camera.position.x += 0.3 * delta_time;
+	//camera.position.y += 0.03 * delta_time;
+	//camera.position.z += 0.03 * delta_time;
 
 	mesh.translation.z = 5.0;
+
+	vec3_t target = { 0, 0, 5 };
+	vec3_t up_direction = { 0, 1, 0 };
+	view_matrix = mat4_look_at(camera.position, target, up_direction);
 
 	mat4_t scale_matrix = mat4_make_scale(mesh.scale.x, mesh.scale.y, mesh.scale.z);
 	mat4_t translation_matrix = mat4_make_translation(mesh.translation.x, mesh.translation.y, mesh.translation.z);
@@ -157,14 +170,18 @@ void update()
 		{
 			vec4_t transformed_vertex = vec4_from_vec3(face_vertices[j]);
 			
-			mat4_t world_matrix = mat4_identity();
+			world_matrix = mat4_identity();
 			world_matrix = mat4_mul_mat4(scale_matrix, world_matrix);
 			world_matrix = mat4_mul_mat4(rotation_matrix_x, world_matrix);
 			world_matrix = mat4_mul_mat4(rotation_matrix_y, world_matrix);
 			world_matrix = mat4_mul_mat4(rotation_matrix_z, world_matrix);
 			world_matrix = mat4_mul_mat4(translation_matrix, world_matrix);
 
-			transformed_vertices[j] = mat4_mul_vec4(world_matrix, transformed_vertex);
+			transformed_vertex = mat4_mul_vec4(world_matrix, transformed_vertex);
+			transformed_vertex = mat4_mul_vec4(view_matrix, transformed_vertex);
+
+
+			transformed_vertices[j] = transformed_vertex;
 		}
 
 		vec3_t vector_a = vec3_from_vec4(transformed_vertices[0]);
@@ -181,8 +198,8 @@ void update()
 		vec3_t normal = vec3_cross(vector_ab, vector_ac);
 		vec3_normalize(&normal);
 
-		//vec3_t origin = { 0,0,0 };
-		vec3_t camera_ray = vec3_sub(camera_position, vector_a);
+		vec3_t origin = { 0, 0, 0 };
+		vec3_t camera_ray = vec3_sub(origin, vector_a);
 		//vec3_normalize(&camera_ray);
 
 		float dot_normal_camera = vec3_dot(normal, camera_ray);

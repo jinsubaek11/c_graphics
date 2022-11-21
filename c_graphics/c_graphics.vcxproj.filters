@@ -48,7 +48,7 @@
     <ClCompile Include="src\upng.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera.cpp">
+    <ClCompile Include="src\camera.c">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
