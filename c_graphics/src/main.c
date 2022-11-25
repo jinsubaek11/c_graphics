@@ -11,6 +11,7 @@
 #include "array.h"
 #include "matrix.h"
 #include "light.h"
+#include "clipping.h"
 #include "upng.h"
 
 #define MAX_TRIANGLES_PER_MESH 10000
@@ -48,18 +49,21 @@ void setup()
 
 	float fov = M_PI / 3.0f;
 	float aspect = (float)window_height / (float)window_width;
-	float znear = 0.1;
-	float zfar = 100.0;
-	proj_matrix = mat4_make_perspective(fov, aspect, znear, zfar);
+	float z_near = 0.1;
+	float z_far = 100.0;
+	proj_matrix = mat4_make_perspective(fov, aspect, z_near, z_far);
+
+	init_frustum_planes(fov, z_near, z_far);
 
 	//mesh_texture = (uint32_t*)REDBRICK_TEXTURE;
 	texture_width = 64;
 	texture_height = 64;
 
 	//load_cube_mesh_data();
-	//load_obj_file_data("./assets/f22.obj");
-	load_obj_file_data("./assets/drone.obj");
-	load_png_texture_data("./assets/drone.png");
+	load_obj_file_data("./assets/cube.obj");
+	load_png_texture_data("./assets/cube.png");
+	//load_obj_file_data("./assets/drone.obj");
+	//load_png_texture_data("./assets/drone.png");
 }
 
 void process_input()
@@ -183,6 +187,8 @@ void update()
 	int num_faces = array_length(mesh.faces);
 	for (int i = 0; i < num_faces; i++)
 	{
+		if (i != 4) continue;
+
 		face_t mesh_face = mesh.faces[i];
 
 		vec3_t face_vertices[3];
@@ -237,6 +243,16 @@ void update()
 				continue;
 			}
 		}
+
+		polygon_t polygon = create_polygon_from_triangle(
+			vec3_from_vec4(transformed_vertices[0]),
+			vec3_from_vec4(transformed_vertices[1]),
+			vec3_from_vec4(transformed_vertices[2])
+		);
+
+		clip_polygon(&polygon);
+
+		printf("Number of polygon vertices after clipping: %d\n ", polygon.num_vertices);
 
 		vec4_t projected_points[3];
 
